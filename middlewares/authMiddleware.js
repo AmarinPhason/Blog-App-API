@@ -3,8 +3,8 @@ import { User } from "../models/userModel.js";
 import { AppError } from "../middlewares/errorHandler.js";
 
 export const authMiddleware = async (req, res, next) => {
+  const token = req.cookies.access_token;
   try {
-    const token = req.cookies.access_token;
     if (!token) {
       return next(new AppError("Unauthorized", 401));
     }
