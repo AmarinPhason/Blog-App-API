@@ -28,9 +28,6 @@ app.use(helmet());
 
 // Routes
 app.use(`${API_BASE}/users`, userRouter);
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 // Middlewares
 app.use(routeNotFound);
