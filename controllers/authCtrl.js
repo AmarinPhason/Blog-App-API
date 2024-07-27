@@ -1,14 +1,14 @@
+import { AppError } from "../middlewares/errorHandler.js";
 import { User } from "../models/userModel.js";
-
 export const registerCtrl = async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
     if (!username || !email || !password) {
-      return res.status(400).json({ message: "Please enter all fields" });
+      throw new AppError("Please enter all fields", 400);
     }
     const findUser = await User.findOne({ email });
     if (findUser) {
-      return res.status(400).json({ message: "Email already exists" });
+      throw new AppError("User already exists", 400);
     }
     const newUser = await User.create({ username, email, password });
     const { password: _password, ...otherDetails } = newUser._doc;
