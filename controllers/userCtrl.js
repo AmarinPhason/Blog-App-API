@@ -48,3 +48,20 @@ export const deleteUserCtrl = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateToAdmin = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return next(new AppError("User not found", 404));
+    }
+    user.isAdmin = !user.isAdmin;
+    const updatedUser = await user.save();
+    res.status(200).json({
+      message: "User updated successfully",
+      admin: updatedUser.isAdmin,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

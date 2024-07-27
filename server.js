@@ -8,6 +8,7 @@ import { connectDB } from "./database/connectDB.js";
 import authRouter from "./routes/authRoute.js";
 import { routeNotFound, errorHandler } from "./middlewares/errorHandler.js";
 import userRouter from "./routes/userRoute.js";
+import postRouter from "./routes/postRoute.js";
 dotenv.config();
 
 const app = express();
@@ -32,6 +33,7 @@ app.use(cookieParser());
 // Routes
 app.use(`${API_BASE}/auth`, authRouter);
 app.use(`${API_BASE}/users`, userRouter);
+app.use(`${API_BASE}/posts`, postRouter);
 
 // Middlewares
 app.use(routeNotFound);

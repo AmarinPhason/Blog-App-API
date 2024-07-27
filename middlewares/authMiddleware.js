@@ -20,3 +20,15 @@ export const authMiddleware = async (req, res, next) => {
     next(error);
   }
 };
+
+export const adminMiddleware = async (req, res, next) => {
+  const isAdmin = req.user.isAdmin;
+  try {
+    if (!isAdmin) {
+      return next(new AppError("Admin access only", 401));
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
