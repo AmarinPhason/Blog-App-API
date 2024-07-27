@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
@@ -25,6 +26,7 @@ app.use(
 );
 app.use(morgan("dev"));
 app.use(helmet());
+app.use(cookieParser());
 
 // Routes
 app.use(`${API_BASE}/users`, userRouter);
