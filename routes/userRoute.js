@@ -1,8 +1,7 @@
 import express from "express";
-import { loginCtrl, registerCtrl } from "../controllers/authCtrl.js";
-
+import { updateUserCtrl } from "../controllers/userCtrl.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 const userRouter = express.Router();
-userRouter.post("/register", registerCtrl);
-userRouter.post("/login", loginCtrl);
+userRouter.put("/update", authMiddleware, updateUserCtrl);
 
 export default userRouter;

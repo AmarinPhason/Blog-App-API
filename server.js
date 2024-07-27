@@ -5,8 +5,9 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import { connectDB } from "./database/connectDB.js";
-import userRouter from "./routes/userRoute.js";
+import authRouter from "./routes/authRoute.js";
 import { routeNotFound, errorHandler } from "./middlewares/errorHandler.js";
+import userRouter from "./routes/userRoute.js";
 dotenv.config();
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(helmet());
 app.use(cookieParser());
 
 // Routes
+app.use(`${API_BASE}/auth`, authRouter);
 app.use(`${API_BASE}/users`, userRouter);
 
 // Middlewares

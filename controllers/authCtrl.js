@@ -1,15 +1,20 @@
 import { AppError } from "../middlewares/errorHandler.js";
 import { User } from "../models/userModel.js";
 import { setCookieOptions } from "../utils/cookieOptions.js";
+
 export const registerCtrl = async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
     if (!username || !email || !password) {
-      throw new AppError("Please enter all fields", 400);
+      return next(new AppError("Please enter all fields", 400));
     }
     const findUser = await User.findOne({ email });
     if (findUser) {
-      throw new AppError("User already exists", 400);
+      return next(new AppError("User already exists", 400));
+    }
+    const findUsername = await User.findOne({ username });
+    if (findUsername) {
+      return next(new AppError("Username already exists", 400));
     }
     const newUser = await User.create({ username, email, password });
     const { password: _password, ...otherDetails } = newUser._doc;
@@ -26,15 +31,15 @@ export const loginCtrl = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
-      throw new AppError("Please enter all fields", 400);
+      return next(new AppError("Please enter all fields", 400));
     }
     const findUser = await User.findOne({ email });
     if (!findUser) {
-      throw new AppError("User does not exist", 400);
+      return next(new AppError("User does not exist", 400));
     }
     const isMatch = await findUser.comparePassword(password);
     if (!isMatch) {
-      throw new AppError("Invalid password", 400);
+      return next(new AppError("Invalid password", 400));
     }
     const { password: _password, ...otherDetails } = findUser._doc;
     const token = findUser.generateToken();
