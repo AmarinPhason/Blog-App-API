@@ -65,3 +65,36 @@ export const updateToAdmin = async (req, res) => {
     next(error);
   }
 };
+export const getUserCtrl = async (req, res, next) => {
+  try {
+    const startIndex = parseInt(req.query.start) || 0;
+    const limit = parseInt(req.query.limit) || 9;
+    const sortDirection = req.query.order === "asc" ? 1 : -1;
+    const user = await User.find({})
+      .skip(startIndex)
+      .limit(limit)
+      .sort({ createdAt: sortDirection });
+    const totalUser = await User.countDocuments();
+    const usersWithoutPassword = user.map((user) => {
+      const { password: _password, ...otherDetails } = user._doc;
+      return otherDetails;
+    });
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const lastMonthUsers = await User.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
+    res.status(200).json({
+      message: "User fetched successfully",
+      user: usersWithoutPassword,
+      totalUser: totalUser,
+      lastMonthUsers: lastMonthUsers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
